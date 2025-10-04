@@ -1,0 +1,437 @@
+[
+  {
+    "id": "d2b94db2-f005-448a-b855-df27ca694d42",
+    "name": "View",
+    "displayName": "View Container",
+    "category": "layout",
+    "icon": "view_module",
+    "props": {},
+    "emits": {},
+    "values": {
+      "name": "form1",
+      "route": "/form1",
+      "backgroundColor": "#ffffff",
+      "padding": "16px"
+    },
+    "children": [
+      {
+        "id": "1bd21c82-f9fe-4045-b71b-0894a0079390",
+        "name": "Div",
+        "displayName": "Div Container",
+        "category": "layout",
+        "icon": "view_agenda",
+        "props": {
+          "content": {
+            "default": "",
+            "description": "Conteúdo interno do div",
+            "editor": "html"
+          },
+          "class": {
+            "default": "",
+            "description": "Classes CSS customizadas"
+          },
+          "style": {
+            "default": "",
+            "description": "Estilos CSS inline",
+            "editor": "css"
+          },
+          "backgroundColor": {
+            "default": "",
+            "description": "Cor de fundo",
+            "editor": "color"
+          },
+          "padding": {
+            "default": "8px",
+            "description": "Espaçamento interno"
+          },
+          "margin": {
+            "default": "0px",
+            "description": "Espaçamento interno"
+          }
+        },
+        "emits": {
+          "click": {
+            "description": "Emitido quando o div é clicado"
+          },
+          "mouseenter": {
+            "description": "Emitido quando o mouse entra no div"
+          },
+          "mouseleave": {
+            "description": "Emitido quando o mouse sai do div"
+          }
+        },
+        "values": {
+          "content": "",
+          "class": "",
+          "style": "",
+          "backgroundColor": "",
+          "padding": "8px",
+          "margin": "0px",
+          "click": null,
+          "mouseenter": null,
+          "mouseleave": null
+        },
+        "children": [
+          {
+            "id": "b2c3da28-6525-40a2-a6af-53364b2c35c6",
+            "name": "Form",
+            "displayName": "Form Container",
+            "category": "form",
+            "icon": "dynamic_form",
+            "props": {
+              "name": {
+                "default": "",
+                "description": "Form name",
+                "editor": "text"
+              },
+              "dataset": {
+                "default": "",
+                "description": "Vínculo ao Dataset",
+                "editor": "link",
+                "linkType": "Dataset",
+                "exclusiveWith": [
+                  "action",
+                  "method"
+                ]
+              },
+              "action": {
+                "default": "",
+                "description": "URL de ação do formulário"
+              },
+              "method": {
+                "default": "POST",
+                "description": "Método HTTP do formulário",
+                "editor": "select",
+                "options": [
+                  {
+                    "label": "GET",
+                    "value": "GET"
+                  },
+                  {
+                    "label": "POST",
+                    "value": "POST"
+                  },
+                  {
+                    "label": "PUT",
+                    "value": "PUT"
+                  },
+                  {
+                    "label": "DELETE",
+                    "value": "DELETE"
+                  }
+                ]
+              },
+              "novalidate": {
+                "default": false,
+                "description": "Desabilitar validação HTML5",
+                "editor": "boolean"
+              }
+            },
+            "emits": {
+              "submit": {
+                "description": "Emitido quando o formulário é submetido"
+              },
+              "reset": {
+                "description": "Emitido quando o formulário é resetado"
+              },
+              "click": {
+                "description": "Emitido quando o form é clicado"
+              }
+            },
+            "values": {
+              "name": "form1",
+              "dataset": "570d6e41-e9a0-40fc-97cb-0de9956ee257",
+              "action": "",
+              "method": "",
+              "novalidate": false,
+              "submit": null,
+              "reset": null,
+              "click": null
+            },
+            "children": [
+              {
+                "id": "846d63df-8f01-4b21-8dcd-444790d3e50f",
+                "name": "InputText",
+                "displayName": "Input Text",
+                "category": "form",
+                "icon": "text_fields",
+                "props": {
+                  "label": {
+                    "default": "Label",
+                    "description": "Rótulo do campo"
+                  },
+                  "name": {
+                    "default": "Name",
+                    "description": "Nome do campo"
+                  },
+                  "placeholder": {
+                    "default": "",
+                    "description": "Texto de placeholder"
+                  },
+                  "value": {
+                    "default": "",
+                    "description": "Valor do campo"
+                  },
+                  "required": {
+                    "default": false,
+                    "description": "Campo obrigatório",
+                    "editor": "boolean"
+                  },
+                  "disabled": {
+                    "default": false,
+                    "description": "Campo desabilitado",
+                    "editor": "boolean"
+                  },
+                  "mask": {
+                    "default": "",
+                    "description": "Máscara de entrada (opcional)",
+                    "visible": true
+                  }
+                },
+                "emits": {
+                  "update:modelValue": {
+                    "description": "Emitido quando o valor muda"
+                  },
+                  "focus": {
+                    "description": "Emitido quando o campo recebe foco"
+                  },
+                  "blur": {
+                    "description": "Emitido quando o campo perde foco"
+                  }
+                },
+                "values": {
+                  "label": "Nome",
+                  "name": "nome",
+                  "placeholder": "",
+                  "value": "",
+                  "required": false,
+                  "disabled": false,
+                  "mask": "",
+                  "update:modelValue": null,
+                  "focus": null,
+                  "blur": null
+                },
+                "children": [],
+                "slotName": "default"
+              },
+              {
+                "id": "d1c6dff9-467b-47ff-818f-83dfcb120269",
+                "name": "Spacer",
+                "displayName": "Espaçador",
+                "category": "layout",
+                "icon": "space_bar",
+                "props": {
+                  "size": {
+                    "default": "16px",
+                    "description": "Tamanho do espaçamento"
+                  },
+                  "direction": {
+                    "default": "vertical",
+                    "description": "Direção do espaçamento (vertical, horizontal)"
+                  },
+                  "color": {
+                    "default": "transparent",
+                    "description": "Cor de fundo (opcional para debug)"
+                  }
+                },
+                "emits": {},
+                "values": {
+                  "size": "16px",
+                  "direction": "vertical",
+                  "color": "transparent"
+                },
+                "children": [],
+                "slotName": "default"
+              },
+              {
+                "id": "1270a3bb-33e2-4cfd-bb9d-0b432ae9562a",
+                "name": "Button",
+                "displayName": "Botão",
+                "category": "form",
+                "icon": "smart_button",
+                "props": {
+                  "label": {
+                    "default": "Clique aqui",
+                    "description": "Texto do botão"
+                  },
+                  "color": {
+                    "default": "primary",
+                    "description": "Cor do botão",
+                    "editor": "select",
+                    "options": [
+                      {
+                        "label": "Primary",
+                        "value": "primary"
+                      },
+                      {
+                        "label": "Secondary",
+                        "value": "secondary"
+                      },
+                      {
+                        "label": "Positive",
+                        "value": "positive"
+                      },
+                      {
+                        "label": "Negative",
+                        "value": "negative"
+                      },
+                      {
+                        "label": "Warning",
+                        "value": "warning"
+                      }
+                    ]
+                  },
+                  "size": {
+                    "default": "md",
+                    "description": "Tamanho do botão",
+                    "editor": "radio",
+                    "options": [
+                      {
+                        "label": "XS",
+                        "value": "xs"
+                      },
+                      {
+                        "label": "SM",
+                        "value": "sm"
+                      },
+                      {
+                        "label": "MD",
+                        "value": "md"
+                      },
+                      {
+                        "label": "LG",
+                        "value": "lg"
+                      }
+                    ]
+                  },
+                  "type": {
+                    "default": "button",
+                    "description": "Tipo do Botão",
+                    "editor": "select",
+                    "options": [
+                      {
+                        "label": "Button",
+                        "value": "button"
+                      },
+                      {
+                        "label": "Submit",
+                        "value": "submit"
+                      }
+                    ]
+                  },
+                  "rounded": {
+                    "default": false,
+                    "description": "Bordas redondas",
+                    "editor": "boolean"
+                  },
+                  "disabled": {
+                    "default": false,
+                    "description": "Botão desabilitado",
+                    "editor": "boolean"
+                  },
+                  "icon": {
+                    "default": "",
+                    "description": "Ícone do botão"
+                  }
+                },
+                "emits": {
+                  "click": {
+                    "description": "Emitido quando o botão é clicado",
+                    "editor": "javascript"
+                  },
+                  "focus": {
+                    "description": "Emitido quando o botão recebe foco",
+                    "editor": "javascript"
+                  }
+                },
+                "values": {
+                  "label": "Salvar",
+                  "color": "primary",
+                  "size": "md",
+                  "type": "submit",
+                  "rounded": true,
+                  "disabled": false,
+                  "icon": "done",
+                  "click": null,
+                  "focus": null
+                },
+                "children": [],
+                "slotName": "default"
+              }
+            ],
+            "slotName": "default"
+          }
+        ],
+        "slotName": "default"
+      },
+      {
+        "id": "570d6e41-e9a0-40fc-97cb-0de9956ee257",
+        "name": "Dataset",
+        "displayName": "Dataset",
+        "category": "data",
+        "icon": "dataset",
+        "props": {
+          "name": {
+            "default": "dataset1",
+            "description": "Nome do dataset",
+            "editor": "text"
+          },
+          "value": {
+            "default": {
+              "data": [
+                {
+                  "id": 1,
+                  "name": "Alice",
+                  "email": "alice@example.com"
+                },
+                {
+                  "id": 2,
+                  "name": "Bob",
+                  "email": "bob@example.com"
+                },
+                {
+                  "id": 3,
+                  "name": "Carol",
+                  "email": "carol@example.com"
+                }
+              ]
+            },
+            "description": "Dados (JSON)",
+            "editor": "object"
+          }
+        },
+        "emits": {
+          "change": {
+            "description": "Emitido quando o dataset é atualizado",
+            "visible": false
+          }
+        },
+        "values": {
+          "name": "dataset1",
+          "value": {
+            "data": [
+              {
+                "id": 1,
+                "name": "Alice",
+                "email": "alice@example.com"
+              },
+              {
+                "id": 2,
+                "name": "Bob",
+                "email": "bob@example.com"
+              },
+              {
+                "id": 3,
+                "name": "Carol",
+                "email": "carol@example.com"
+              }
+            ]
+          },
+          "change": null
+        },
+        "children": [],
+        "slotName": "default"
+      }
+    ]
+  }
+]

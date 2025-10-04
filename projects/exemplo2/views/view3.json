@@ -1,0 +1,310 @@
+[
+  {
+    "id": "component_1",
+    "name": "View",
+    "displayName": "View Container",
+    "category": "layout",
+    "icon": "view_module",
+    "props": {},
+    "emits": {},
+    "values": {
+      "name": "view1",
+      "route": "/view/:id",
+      "backgroundColor": "#ffffff",
+      "padding": "16px"
+    },
+    "children": [
+      {
+        "id": "component_2",
+        "name": "Card",
+        "displayName": "Card",
+        "category": "layout",
+        "icon": "credit_card",
+        "props": {
+          "title": {
+            "default": "Título do Card",
+            "description": "Título do cartão"
+          },
+          "content": {
+            "default": "Conteúdo do cartão",
+            "description": "Conteúdo interno"
+          },
+          "flat": {
+            "default": false,
+            "description": "Card sem sombra"
+          },
+          "bordered": {
+            "default": true,
+            "description": "Card com borda"
+          },
+          "padding": {
+            "default": "16px",
+            "description": "Espaçamento interno"
+          }
+        },
+        "emits": {
+          "click": {
+            "description": "Emitido quando o card é clicado"
+          }
+        },
+        "values": {
+          "title": "Card {{id}}",
+          "content": "Conteúdo do cartão",
+          "flat": false,
+          "bordered": true,
+          "padding": "16px",
+          "click": null
+        },
+        "children": []
+      },
+      {
+        "id": "component_3",
+        "name": "Button",
+        "displayName": "Botão",
+        "category": "form",
+        "icon": "smart_button",
+        "props": {
+          "label": {
+            "default": "Clique aqui",
+            "description": "Texto do botão"
+          },
+          "color": {
+            "default": "primary",
+            "description": "Cor do botão"
+          },
+          "size": {
+            "default": "md",
+            "description": "Tamanho do botão"
+          },
+          "disabled": {
+            "default": false,
+            "description": "Botão desabilitado"
+          },
+          "icon": {
+            "default": "",
+            "description": "Ícone do botão"
+          }
+        },
+        "emits": {
+          "click": {
+            "description": "Emitido quando o botão é clicado"
+          },
+          "focus": {
+            "description": "Emitido quando o botão recebe foco"
+          }
+        },
+        "values": {
+          "label": "bOTAO 1",
+          "color": "primary",
+          "size": "md",
+          "disabled": false,
+          "icon": "",
+          "click": null,
+          "focus": null
+        },
+        "children": []
+      },
+      {
+        "id": "component_5",
+        "name": "Div",
+        "displayName": "Div Container",
+        "category": "layout",
+        "icon": "view_agenda",
+        "props": {
+          "content": {
+            "default": "Conteúdo do div",
+            "description": "Conteúdo interno do div"
+          },
+          "class": {
+            "default": "",
+            "description": "Classes CSS customizadas"
+          },
+          "style": {
+            "default": "",
+            "description": "Estilos CSS inline"
+          },
+          "backgroundColor": {
+            "default": "",
+            "description": "Cor de fundo"
+          },
+          "padding": {
+            "default": "8px",
+            "description": "Espaçamento interno"
+          }
+        },
+        "emits": {
+          "click": {
+            "description": "Emitido quando o div é clicado"
+          },
+          "mouseenter": {
+            "description": "Emitido quando o mouse entra no div"
+          },
+          "mouseleave": {
+            "description": "Emitido quando o mouse sai do div"
+          }
+        },
+        "values": {
+          "content": "Conteúdo do div",
+          "class": "",
+          "style": "",
+          "backgroundColor": "",
+          "padding": "8px",
+          "click": null,
+          "mouseenter": null,
+          "mouseleave": null
+        },
+        "children": []
+      },
+      {
+        "id": "component_6",
+        "name": "Image",
+        "displayName": "Imagem",
+        "category": "media",
+        "icon": "image",
+        "props": {
+          "src": {
+            "default": "https://ito-group.com/wp-content/uploads/2025/04/no-image.jpg",
+            "description": "URL da imagem"
+          },
+          "alt": {
+            "default": "Imagem",
+            "description": "Texto alternativo"
+          },
+          "width": {
+            "default": "300px",
+            "description": "Largura da imagem"
+          },
+          "height": {
+            "default": "200px",
+            "description": "Altura da imagem"
+          },
+          "fit": {
+            "default": "cover",
+            "description": "Como a imagem se ajusta (cover, contain, fill)"
+          }
+        },
+        "emits": {
+          "load": {
+            "description": "Emitido quando a imagem carrega"
+          },
+          "error": {
+            "description": "Emitido quando há erro no carregamento"
+          },
+          "click": {
+            "description": "Emitido quando a imagem é clicada"
+          }
+        },
+        "values": {
+          "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtWr3qLYO3T4_Sa2qWslpXZhZjRoBZgZ-BMg&s",
+          "alt": "Imagem",
+          "width": "300px",
+          "height": "200px",
+          "fit": "cover",
+          "load": null,
+          "error": null,
+          "click": null
+        },
+        "children": []
+      },
+      {
+        "id": "component_3",
+        "name": "Textarea",
+        "displayName": "Textarea",
+        "category": "form",
+        "icon": "text_fields",
+        "props": {
+          "label": {
+            "default": "Texto",
+            "description": "Rótulo do campo"
+          },
+          "placeholder": {
+            "default": "Digite seu texto aqui...",
+            "description": "Texto de placeholder"
+          },
+          "value": {
+            "default": "",
+            "description": "Valor do campo"
+          },
+          "rows": {
+            "default": 3,
+            "description": "Número de linhas"
+          },
+          "required": {
+            "default": false,
+            "description": "Campo obrigatório"
+          },
+          "disabled": {
+            "default": false,
+            "description": "Campo desabilitado"
+          }
+        },
+        "emits": {
+          "update:modelValue": {
+            "description": "Emitido quando o valor muda"
+          },
+          "focus": {
+            "description": "Emitido quando o campo recebe foco"
+          },
+          "blur": {
+            "description": "Emitido quando o campo perde foco"
+          }
+        },
+        "values": {
+          "label": "Texto",
+          "placeholder": "Digite seu texto aqui...",
+          "value": "",
+          "rows": 3,
+          "required": false,
+          "disabled": false,
+          "update:modelValue": null,
+          "focus": null,
+          "blur": null
+        },
+        "children": []
+      },
+      {
+        "id": "component_4",
+        "name": "Card",
+        "displayName": "Card",
+        "category": "layout",
+        "icon": "credit_card",
+        "props": {
+          "title": {
+            "default": "Título do Card",
+            "description": "Título do cartão"
+          },
+          "content": {
+            "default": "Conteúdo do cartão",
+            "description": "Conteúdo interno"
+          },
+          "flat": {
+            "default": false,
+            "description": "Card sem sombra"
+          },
+          "bordered": {
+            "default": true,
+            "description": "Card com borda"
+          },
+          "padding": {
+            "default": "16px",
+            "description": "Espaçamento interno"
+          }
+        },
+        "emits": {
+          "click": {
+            "description": "Emitido quando o card é clicado"
+          }
+        },
+        "values": {
+          "title": "Título do Card",
+          "content": "Conteúdo do cartão",
+          "flat": false,
+          "bordered": true,
+          "padding": "16px",
+          "click": null
+        },
+        "children": []
+      }
+    ]
+  }
+]
