@@ -9,7 +9,6 @@
             :component="rootView"
             edit-mode="preview"
             :selected-component-id="null"
-            @update-component-value="onUpdateComponentValue"
           />
       </div>
     </div>
