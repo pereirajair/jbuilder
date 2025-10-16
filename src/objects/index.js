@@ -1,4 +1,4 @@
-import InputText from './InputText'
+import Input from './Input'
 import Div from './Div'
 import View from './View'
 import Button from './Button'
@@ -14,7 +14,7 @@ import Spinner from './Spinner'
 
 // Registro de classes (construtores)
 export const ObjectRegistry = {
-  InputText,
+  Input,
   Div,
   View,
   Button,

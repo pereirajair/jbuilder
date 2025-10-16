@@ -54,6 +54,8 @@ export default class Form extends BaseObject {
         novalidate: values.novalidate,
         onSubmit: (e) => {
           e.stopPropagation();
+
+          console.log('onSubmit', e);
           // Resolver elemento <form> do q-form
           let formEl = e?.target || e?.currentTarget?.$el || e?.currentTarget
           if (formEl && formEl.tagName !== 'FORM' && formEl.closest) formEl = formEl.closest('form')
@@ -73,7 +75,7 @@ export default class Form extends BaseObject {
             }
           } catch (_) { /* noop */ }
 
-          // console.log(data);
+          console.log(data);
 
           if (!values.action) {
             e && typeof e.preventDefault === 'function' && e.preventDefault()
@@ -89,15 +91,16 @@ export default class Form extends BaseObject {
                   if (!dsNode.values) dsNode.values = {}
                   dsNode.values.value = data
                 }
-                ctx.emit('update-component-value', values.dataset, data); 
+                // console.log('dsNode', { id: values.dataset, data: data });
+                // ctx.emit('update-component-value', { id: values.dataset, data: data }); 
                 // console.log(root);
               }
             } catch (_) { /* noop */ }
-            ctx.emit && ctx.emit('submit', { event: e, data })
+            // ctx.emit && ctx.emit('submit', { event: e, data })
           }
         },
         onReset: (e) => ctx.emit && ctx.emit('reset', e),
-        onClick: (e) => ctx.emit && ctx.emit('click', e)
+        // onClick: (e) => ctx.emit && ctx.emit('click', e)
       },
       children: defaultSlot.length > 0
         ? this.renderSlotChildren(defaultSlot, ctx)

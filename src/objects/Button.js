@@ -5,8 +5,8 @@ export default class Button extends BaseObject {
     super({
       name: 'Button',
       category: 'form',
-      displayName: 'Botão',
-      description: 'Botão clicável',
+      displayName: 'Button',
+      description: 'Button clicável',
       icon: 'smart_button',
       props: {
         label: { type: String, default: 'Clique aqui', description: 'Texto do botão' },

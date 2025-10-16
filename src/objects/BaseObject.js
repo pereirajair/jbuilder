@@ -4,8 +4,16 @@ export default class BaseObject {
     this.category = definition.category
     this.displayName = definition.displayName
     this.description = definition.description
+    this.value = definition.value || ''
     this.icon = definition.icon
-    this.props = definition.props || {}
+    // Propriedades base comuns a todos os objetos
+    const baseProps = {
+      name: { type: String, default: 'Name', description: 'Nome do campo' },
+      // value: { type: String, default: '', description: 'Valor do campo' },
+      // Link para um Dataset pelo seu nome (values.name do componente Dataset)
+      dataset: { type: String, default: '', description: 'Nome do Dataset associado', editor: 'link', visible: true, linkType: 'Dataset' }
+    }
+    this.props = { ...baseProps, ...(definition.props || {}) }
     this.emits = definition.emits || {}
     this.slots = definition.slots || []
   }
@@ -159,6 +167,49 @@ export default class BaseObject {
       current = current[seg]
     }
     return current
+  }
+
+  // Busca um nó na árvore recursivamente que satisfaça o predicado
+  // Retorna o primeiro nó encontrado (DFS)
+  static findInTree(node, predicate) {
+    if (!node) return null
+    try {
+      if (predicate && typeof predicate === 'function' && predicate(node)) return node
+      const children = Array.isArray(node.children) ? node.children : []
+      for (const child of children) {
+        const found = BaseObject.findInTree(child, predicate)
+        if (found) return found
+      }
+      return null
+    } catch (_) {
+      return null
+    }
+  }
+
+  // Obtém um componente Dataset pelo seu nome (values.name)
+  static getDataset(datasetName) {
+    try {
+      const name = (datasetName || '').trim()
+      // if (!name) return null
+      const w = typeof window !== 'undefined' ? window : globalThis
+      const root = w.__jbuilderRootTree
+      // if (!root) return null
+      return BaseObject.findInTree(root, (n) => n && n.name === 'Dataset' && n.values && n.values.name === name)
+    } catch (_) {
+      return null
+    }
+  }
+
+  // Obtém um objeto pelo seu ID pesquisando na rootTree e em todos os children
+  static getObjectByID(id) {
+    try {
+      const targetId = id || ''
+      const w = typeof window !== 'undefined' ? window : globalThis
+      const root = w.__jbuilderRootTree
+      return BaseObject.findInTree(root, (n) => n && n.id === targetId)
+    } catch (_) {
+      return null
+    }
   }
 }
 

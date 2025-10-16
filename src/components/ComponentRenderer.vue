@@ -72,7 +72,6 @@
             @select-component="selectComponent"
             @open-inspector="openInspector"
             @delete-component="deleteComponent"
-            @update-component-value="updateComponentValue"
             @handle-drag-over="handleDragOver"
             @handle-drop-on-component="handleDropOnComponent"
             @handle-drag-start="handleDragStart"
@@ -94,6 +93,7 @@
 import { computed, h, resolveComponent, getCurrentInstance } from 'vue'
 import { createObjectInstance } from '../objects'
 import { getQuasarComponent, isQuasarComponent } from '../lib/quasarComponents'
+import BaseObject from 'src/objects/BaseObject'
 defineOptions({ name: 'ComponentRenderer' })
 
 const props = defineProps({
@@ -127,6 +127,7 @@ const emit = defineEmits([
 ])
 
 function renderNode(node) {
+  // console.log('renderNode()', { node });
   if (!node || !node.tag) return null
   const originalTag = node.tag
   let Comp
@@ -173,7 +174,7 @@ function renderNode(node) {
 const VNodeRenderer = {
   name: 'VNodeRenderer',
   inheritAttrs: false,
-  props: { node: { type: Object, required: true } },
+  props: { node: { type: Object, required: false } },
   setup(p) {
     return () => renderNode(p.node)
   }
@@ -268,10 +269,6 @@ function openInspector(component) {
 function deleteComponent(componentId) { 
   console.log('ComponentRenderer.deleteComponent()', { componentId })
   emit('delete-component', componentId) 
-}
-function updateComponentValue(componentId, newValue) { 
-  // console.log('ComponentRenderer.updateComponentValue()', { componentId, newValue })
-  emit('update-component-value', componentId, newValue) 
 }
 function handleClick() { 
   // console.log('ComponentRenderer.handleClick()', { componentId: props.component.id })
