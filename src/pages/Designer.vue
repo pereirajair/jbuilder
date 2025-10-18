@@ -131,15 +131,6 @@ import ObjectInspector from 'components/ObjectInspector.vue'
 import ComponentRenderer from 'components/ComponentRenderer.vue'
 import JsonEditor from 'components/JsonEditor.vue'
 import { createObjectInstance } from '../objects'
-import InputText from '../objects/Input.js'
-import Div from '../objects/Div.js'
-import View from '../objects/View.js'
-import Button from '../objects/Button.js'
-import Select from '../objects/Select.js'
-import Textarea from '../objects/Textarea.js'
-import Card from '../objects/Card.js'
-import Image from '../objects/Image.js'
-import Spacer from '../objects/Spacer.js'
 
 const $q = useQuasar()
 
@@ -159,18 +150,6 @@ function recalcLayout() {
   availableHeight.value = window.innerHeight - headerH
 }
 
-// Componentes disponíveis para renderização
-const availableComponents = {
-  InputText,
-  Div,
-  View,
-  Button,
-  Select,
-  Textarea,
-  Card,
-  Image,
-  Spacer
-}
 
 // Componente selecionado para edição (prover target sempre válido)
 const selectedComponent = computed(() => {
@@ -274,6 +253,7 @@ function loadDesignerJson(json, meta) {
 
 function updateGlobalRoot() {
   const w = typeof window !== 'undefined' ? window : globalThis
+  console.log(viewComponents.value[0]);
   w.__jbuilderRootTree = viewComponents.value[0] || null
 }
 

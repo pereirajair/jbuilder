@@ -355,7 +355,7 @@ function normalizePropMeta(propDef) {
 }
 
 function isPropVisible(meta, values) {
-  console.log('isPropVisible', meta, values);
+  // console.log('isPropVisible', meta, values);
   if (meta.visible === false) return false
   if (typeof meta.visibleIf === 'function') {
     try { return !!meta.visibleIf(values) } catch (_) { return true }

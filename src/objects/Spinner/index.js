@@ -1,6 +1,6 @@
-import BaseObject from './BaseObject'
+import BaseObject from '../../components/BaseObject'
 
-export default class Spinner extends BaseObject {
+export default class SpinnerObject extends BaseObject {
   constructor() {
     super({
       name: 'Spinner',
@@ -73,5 +73,3 @@ export default class Spinner extends BaseObject {
     }
   }
 }
-
-

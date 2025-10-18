@@ -90,10 +90,16 @@
 </template>
 
 <script setup>
-import { computed, h, resolveComponent, getCurrentInstance } from 'vue'
+import { computed, h, resolveComponent, getCurrentInstance, ref, watchEffect, defineAsyncComponent } from 'vue'
 import { createObjectInstance } from '../objects'
-import { getQuasarComponent, isQuasarComponent } from '../lib/quasarComponents'
-import BaseObject from 'src/objects/BaseObject'
+import { 
+  getQuasarComponent, 
+  isQuasarComponent, 
+  getCustomComponent, 
+  loadCustomComponent, 
+  isCustomComponent 
+} from './ComponentRegistry'
+import BaseObject from 'src/components/BaseObject'
 defineOptions({ name: 'ComponentRenderer' })
 
 const props = defineProps({
@@ -126,12 +132,36 @@ const emit = defineEmits([
   'reset'
 ])
 
+// Cache de componentes async
+const asyncComponentCache = new Map()
+
 function renderNode(node) {
-  // console.log('renderNode()', { node });
   if (!node || !node.tag) return null
   const originalTag = node.tag
   let Comp
-  if (originalTag === 'ComponentRenderer') {
+  
+  // Componentes Vue customizados dinâmicos
+  if (originalTag.endsWith('vue')) {
+    const componentName = originalTag.replace('vue', '')
+    
+    // Tentar obter do cache primeiro
+    Comp = getCustomComponent(componentName)
+    
+    // Se não estiver no cache, criar componente async
+    if (!Comp) {
+      if (!asyncComponentCache.has(componentName)) {
+        const asyncComp = defineAsyncComponent({
+          loader: () => loadCustomComponent(componentName),
+          loadingComponent: () => h('div', { style: 'border: 1px dashed #ccc; padding: 10px; text-align: center;' }, 'Carregando...'),
+          errorComponent: () => h('div', { style: 'border: 1px solid red; padding: 10px; text-align: center; color: red;' }, `Erro ao carregar ${componentName}`),
+          delay: 200,
+          timeout: 3000
+        })
+        asyncComponentCache.set(componentName, asyncComp)
+      }
+      Comp = asyncComponentCache.get(componentName)
+    }
+  } else if (originalTag === 'ComponentRenderer') {
     // Preferir a própria instância do componente
     const self = getCurrentInstance()?.type
     Comp = self || resolveComponent('ComponentRenderer')

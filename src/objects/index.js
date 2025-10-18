@@ -11,6 +11,7 @@ import Form from './Form'
 import Dataset from './Dataset'
 import HttpRequest from './HttpRequest'
 import Spinner from './Spinner'
+import JTable from './JTable'
 
 // Registro de classes (construtores)
 export const ObjectRegistry = {
@@ -24,14 +25,16 @@ export const ObjectRegistry = {
   Image,
   Spacer,
   Form,
-  Dataset
-  , HttpRequest
-  , Spinner
+  Dataset,
+  HttpRequest,
+  Spinner,
+  JTable
 }
 
 // Fábrica para instanciar por nome
 export function createObjectInstance(name) {
   const ClassRef = ObjectRegistry[name]
+  console.log('createObjectInstance', { name, ClassRef });
   if (!ClassRef) return null
   return new ClassRef()
 }

@@ -1,4 +1,4 @@
-import BaseObject from './BaseObject'
+import BaseObject from '../../components/BaseObject'
 
 export default class HttpRequest extends BaseObject {
   constructor() {

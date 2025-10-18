@@ -1,6 +1,6 @@
-import BaseObject from './BaseObject'
+import BaseObject from '../../components/BaseObject'
 
-export default class Select extends BaseObject {
+export default class SelectObject extends BaseObject {
   constructor() {
     super({
       name: 'Select',

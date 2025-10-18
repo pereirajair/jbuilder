@@ -207,38 +207,10 @@
                   "required": false,
                   "disabled": false,
                   "mask": "",
-                  "update:modelValue": null,
+                  "update:modelValue": "console.log('update:modelValue');",
                   "focus": null,
-                  "blur": null
-                },
-                "children": [],
-                "slotName": "default"
-              },
-              {
-                "id": "d1c6dff9-467b-47ff-818f-83dfcb120269",
-                "name": "Spacer",
-                "displayName": "Espaçador",
-                "category": "layout",
-                "icon": "space_bar",
-                "props": {
-                  "size": {
-                    "default": "16px",
-                    "description": "Tamanho do espaçamento"
-                  },
-                  "direction": {
-                    "default": "vertical",
-                    "description": "Direção do espaçamento (vertical, horizontal)"
-                  },
-                  "color": {
-                    "default": "transparent",
-                    "description": "Cor de fundo (opcional para debug)"
-                  }
-                },
-                "emits": {},
-                "values": {
-                  "size": "16px",
-                  "direction": "vertical",
-                  "color": "transparent"
+                  "blur": null,
+                  "dataset": "570d6e41-e9a0-40fc-97cb-0de9956ee257"
                 },
                 "children": [],
                 "slotName": "default"
@@ -357,6 +329,183 @@
                 },
                 "children": [],
                 "slotName": "default"
+              },
+              {
+                "id": "866cb70a-f6e1-460d-b24f-18dbb7aabac3",
+                "name": "Button",
+                "displayName": "Botão",
+                "category": "form",
+                "icon": "smart_button",
+                "props": {
+                  "label": {
+                    "default": "Clique aqui",
+                    "description": "Texto do botão"
+                  },
+                  "color": {
+                    "default": "primary",
+                    "description": "Cor do botão",
+                    "editor": "select",
+                    "options": [
+                      {
+                        "label": "Primary",
+                        "value": "primary"
+                      },
+                      {
+                        "label": "Secondary",
+                        "value": "secondary"
+                      },
+                      {
+                        "label": "Positive",
+                        "value": "positive"
+                      },
+                      {
+                        "label": "Negative",
+                        "value": "negative"
+                      },
+                      {
+                        "label": "Warning",
+                        "value": "warning"
+                      }
+                    ]
+                  },
+                  "size": {
+                    "default": "md",
+                    "description": "Tamanho do botão",
+                    "editor": "radio",
+                    "options": [
+                      {
+                        "label": "XS",
+                        "value": "xs"
+                      },
+                      {
+                        "label": "SM",
+                        "value": "sm"
+                      },
+                      {
+                        "label": "MD",
+                        "value": "md"
+                      },
+                      {
+                        "label": "LG",
+                        "value": "lg"
+                      }
+                    ]
+                  },
+                  "type": {
+                    "default": "button",
+                    "description": "Tipo do Botão",
+                    "editor": "select",
+                    "options": [
+                      {
+                        "label": "Button",
+                        "value": "button"
+                      },
+                      {
+                        "label": "Submit",
+                        "value": "submit"
+                      }
+                    ]
+                  },
+                  "rounded": {
+                    "default": false,
+                    "description": "Bordas redondas",
+                    "editor": "boolean"
+                  },
+                  "disabled": {
+                    "default": false,
+                    "description": "Botão desabilitado",
+                    "editor": "boolean"
+                  },
+                  "icon": {
+                    "default": "",
+                    "description": "Ícone do botão"
+                  }
+                },
+                "emits": {
+                  "click": {
+                    "description": "Emitido quando o botão é clicado",
+                    "editor": "javascript"
+                  },
+                  "focus": {
+                    "description": "Emitido quando o botão recebe foco",
+                    "editor": "javascript"
+                  }
+                },
+                "values": {
+                  "label": "Sem submit",
+                  "color": "primary",
+                  "size": "md",
+                  "type": "button",
+                  "rounded": false,
+                  "disabled": false,
+                  "icon": "",
+                  "click": null,
+                  "focus": null
+                },
+                "children": [],
+                "slotName": "default"
+              },
+              {
+                "id": "ec98738a-ae9f-4dfc-bd0e-5e465bb098ab",
+                "name": "Textarea",
+                "displayName": "Textarea",
+                "category": "form",
+                "icon": "text_fields",
+                "props": {
+                  "label": {
+                    "default": "Texto",
+                    "description": "Rótulo do campo"
+                  },
+                  "placeholder": {
+                    "default": "Digite seu texto aqui...",
+                    "description": "Texto de placeholder"
+                  },
+                  "value": {
+                    "default": "",
+                    "description": "Valor do campo"
+                  },
+                  "rows": {
+                    "default": 3,
+                    "description": "Número de linhas"
+                  },
+                  "required": {
+                    "default": false,
+                    "description": "Campo obrigatório",
+                    "editor": "boolean"
+                  },
+                  "disabled": {
+                    "default": false,
+                    "description": "Campo desabilitado",
+                    "editor": "boolean"
+                  }
+                },
+                "emits": {
+                  "update:modelValue": {
+                    "description": "Emitido quando o valor muda",
+                    "editor": "javascript"
+                  },
+                  "focus": {
+                    "description": "Emitido quando o campo recebe foco",
+                    "editor": "javascript"
+                  },
+                  "blur": {
+                    "description": "Emitido quando o campo perde foco",
+                    "editor": "javascript"
+                  }
+                },
+                "values": {
+                  "label": "teste",
+                  "placeholder": "Digite seu texto aqui...",
+                  "value": "teste",
+                  "rows": 3,
+                  "required": false,
+                  "disabled": false,
+                  "update:modelValue": null,
+                  "focus": null,
+                  "blur": null
+                },
+                "children": [],
+                "slotName": "default"
               }
             ],
             "slotName": "default"
@@ -407,8 +556,9 @@
           }
         },
         "values": {
-          "name": "dataset1",
+          "name": "forms",
           "value": {
+            "nome": "Teste",
             "data": [
               {
                 "id": 1,

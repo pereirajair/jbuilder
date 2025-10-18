@@ -1,6 +1,6 @@
-import BaseObject from './BaseObject'
+import BaseObject from '../../components/BaseObject'
 
-export default class Spacer extends BaseObject {
+export default class SpacerObject extends BaseObject {
   constructor() {
     super({
       name: 'Spacer',

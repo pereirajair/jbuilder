@@ -1,6 +1,6 @@
-import InputText from './Input'
+import InputObject from '../Input'
 
-export default class Textarea extends InputText {
+export default class Textarea extends InputObject {
   constructor() {
     super()
     // Sobrescrever metadados

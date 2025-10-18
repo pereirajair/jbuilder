@@ -1,6 +1,6 @@
-import BaseObject from './BaseObject'
+import BaseObject from '../../components/BaseObject'
 
-export default class Button extends BaseObject {
+export default class ButtonObject extends BaseObject {
   constructor() {
     super({
       name: 'Button',

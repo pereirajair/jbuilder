@@ -1,12 +1,12 @@
-import BaseObject from './BaseObject'
+import BaseObject from '../../components/BaseObject'
 
-export default class Div extends BaseObject {
+export default class JTableObject extends BaseObject {
   constructor() {
     super({
-      name: 'Div',
+      name: 'JTable',
       category: 'layout',
-      displayName: 'Div Container',
-      description: 'Container div para agrupar elementos',
+      displayName: 'JTable Container',
+      description: 'Container table para agrupar colunas e linhas',
       icon: 'view_agenda',
       props: {
         content: { type: String, default: '', description: 'Conteúdo interno do div', editor: 'html' },
@@ -17,9 +17,7 @@ export default class Div extends BaseObject {
         margin: { type: String, default: '0px', description: 'Espaçamento interno' }
       },
       emits: {
-        click: { description: 'Emitido quando o div é clicado' },
-        mouseenter: { description: 'Emitido quando o mouse entra no div' },
-        mouseleave: { description: 'Emitido quando o mouse sai do div' }
+
       },
       slots: [
         {
@@ -40,32 +38,17 @@ export default class Div extends BaseObject {
   }
 
   renderPreview(ctx) {
-    const values = ctx.component.values
-    const component = ctx.component
-    
-    // Filtrar children por slotName
-    const defaultSlot = (component.children || []).filter(child => child.slotName === 'default')
-    
     return {
-      tag: 'div',
+      tag: 'j-table',
       props: {
-        class: values.class,
-        style: this.buildStyle(values),
-        onClick: (e) => ctx.emit && ctx.emit('click', e),
-        onMouseenter: (e) => ctx.emit && ctx.emit('mouseenter', e),
-        onMouseleave: (e) => ctx.emit && ctx.emit('mouseleave', e)
-      },
-      children: defaultSlot.length > 0
-        ? this.renderSlotChildren(defaultSlot, ctx)
-        : [values.content]
+        component: ctx.component,
+        editMode: ctx.editMode,
+        selectedComponentId: ctx.selectedComponentId
+      }
     }
   }
-  
-  // usa helper de BaseObject
 
   renderEdit(ctx) {
-    const values = ctx.component.values
-    const component = ctx.component
-    return this.createSlotDropArea(ctx, component, 'default', 'Div Slot', { });
+    return this.renderPreview(ctx)
   } 
 }

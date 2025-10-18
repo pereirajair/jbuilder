@@ -10,7 +10,6 @@
     </q-item-section>
   </q-item>
 </template>
-
 <script setup>
 const props = defineProps({
   title: {

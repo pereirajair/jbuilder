@@ -1,6 +1,6 @@
-import BaseObject from './BaseObject'
+import BaseObject from '../../components/BaseObject'
 
-export default class Input extends BaseObject {
+export default class InputObject extends BaseObject {
   constructor() {
     super({
       name: 'Input',
