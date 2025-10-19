@@ -1,11 +1,11 @@
 import BaseObject from '../../components/BaseObject'
 
-export default class Div extends BaseObject {
+export default class DivObject extends BaseObject {
   constructor() {
     super({
       name: 'Div',
       category: 'layout',
-      displayName: 'Div Container',
+      displayName: 'Div',
       description: 'Container div para agrupar elementos',
       icon: 'view_agenda',
       props: {

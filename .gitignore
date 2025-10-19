@@ -31,3 +31,6 @@ yarn-error.log*
 
 # local .env files
 .env.local*
+
+projects/exemplo1/views/*.json
+projects/exemplo2/views/*.json

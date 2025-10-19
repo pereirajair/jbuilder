@@ -1,6 +1,6 @@
 import BaseObject from '../../components/BaseObject'
 
-export default class Form extends BaseObject {
+export default class FormObject extends BaseObject {
   constructor() {
     super({
       name: 'Form',

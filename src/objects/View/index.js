@@ -1,6 +1,6 @@
 import BaseObject from '../../components/BaseObject'
 
-export default class View extends BaseObject {
+export default class ViewObject extends BaseObject {
   constructor() {
     super({
       name: 'View',

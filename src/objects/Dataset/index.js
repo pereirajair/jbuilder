@@ -1,6 +1,6 @@
 import BaseObject from '../../components/BaseObject'
 
-export default class Dataset extends BaseObject {
+export default class DatasetObject extends BaseObject {
   constructor() {
     super({
       name: 'Dataset',

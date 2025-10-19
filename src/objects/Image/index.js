@@ -1,6 +1,6 @@
 import BaseObject from '../../components/BaseObject'
 
-export default class Image extends BaseObject {
+export default class ImageObject extends BaseObject {
   constructor() {
     super({
       name: 'Image',

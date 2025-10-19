@@ -1,6 +1,6 @@
 import BaseObject from '../../components/BaseObject'
 
-export default class Card extends BaseObject {
+export default class CardObject extends BaseObject {
   constructor() {
     super({
       name: 'Card',

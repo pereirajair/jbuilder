@@ -66,14 +66,14 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Dark } from 'quasar'
-import { getAllObjectDefinitions } from '../objects'
+import { getAllComponentsWithMetadata } from './ComponentRegistry.js'
 
 const emit = defineEmits(['component-selected'])
 
 const searchText = ref('')
 const isDark = ref(Dark.isActive)
 
-const components = getAllObjectDefinitions()
+const components = getAllComponentsWithMetadata()
 
 const categories = [
   { name: 'form', label: 'Formulário' },

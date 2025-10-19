@@ -1,55 +1,46 @@
-import Input from './Input'
-import Div from './Div'
-import View from './View'
-import Button from './Button'
-import Select from './Select'
-import Textarea from './Textarea'
-import Card from './Card'
-import Image from './Image'
-import Spacer from './Spacer'
-import Form from './Form'
-import Dataset from './Dataset'
-import HttpRequest from './HttpRequest'
-import Spinner from './Spinner'
-import JTable from './JTable'
+// Sistema centralizado - agora usa ComponentRegistry.js
+import { getBaseObject, getAllComponentsWithMetadata } from '../components/ComponentRegistry.js'
 
-// Registro de classes (construtores)
-export const ObjectRegistry = {
-  Input,
-  Div,
-  View,
-  Button,
-  Select,
-  Textarea,
-  Card,
-  Image,
-  Spacer,
-  Form,
-  Dataset,
-  HttpRequest,
-  Spinner,
-  JTable
-}
-
-// Fábrica para instanciar por nome
-export function createObjectInstance(name) {
-  const ClassRef = ObjectRegistry[name]
-  console.log('createObjectInstance', { name, ClassRef });
-  if (!ClassRef) return null
-  return new ClassRef()
+// Fábrica para instanciar por nome (usando ComponentRegistry)
+export async function createObjectInstance(name) {
+  const BaseObjectClass = await getBaseObject(name)
+  if (!BaseObjectClass) return null
+  return new BaseObjectClass()
 }
 
 // Lista de metadados (instâncias protótipo) para toolbar
-export function getAllObjectDefinitions() {
-  return Object.keys(ObjectRegistry).map((key) => new ObjectRegistry[key]())
+export async function getAllObjectDefinitions() {
+  const components = getAllComponentsWithMetadata()
+  const definitions = []
+  
+  for (const comp of components) {
+    try {
+      const BaseObjectClass = await getBaseObject(comp.name)
+      if (!BaseObjectClass) {
+        console.warn(`BaseObject não encontrado para: ${comp.name}`)
+        continue
+      }
+      
+      const instance = new BaseObjectClass()
+      definitions.push({
+        name: instance.name,
+        displayName: instance.displayName,
+        category: instance.category,
+        description: instance.description,
+        icon: instance.icon,
+        props: instance.props || {},
+        emits: instance.emits || {}
+      })
+    } catch (error) {
+      console.error(`Erro ao criar instância de ${comp.name}:`, error)
+    }
+  }
+  
+  return definitions
 }
-
-export default ObjectRegistry
 
 // Expor registry globalmente para consumidores dinâmicos (ex.: ObjectInspector)
 try {
   const w = typeof window !== 'undefined' ? window : globalThis
-  w.__jbuilderObjectRegistry = ObjectRegistry
+  w.__jbuilderObjectRegistry = { createObjectInstance, getAllObjectDefinitions }
 } catch (e) { /* noop */ }
-
-

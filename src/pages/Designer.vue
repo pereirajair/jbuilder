@@ -56,7 +56,7 @@
                        class="row items-center q-gutter-xs q-pa-xs non-visual-pill"
                        @click="openInspector(nv)"
                      >
-                       <q-icon :name="createObjectInstance(nv.name)?.icon || 'extension'" size="16px" />
+                       <q-icon :name="getComponentIcon(nv.name)" size="16px" />
                        <div class="text-caption">{{ nv.values?.name || nv.name }}</div>
                        <q-btn dense flat round icon="delete" size="xs" color="negative" @click.stop="confirmDelete(nv.id)" />
                      </div>
@@ -124,13 +124,14 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { v4 as uuidv4 } from 'uuid'
 import ObjectInspector from 'components/ObjectInspector.vue'
 import ComponentRenderer from 'components/ComponentRenderer.vue'
 import JsonEditor from 'components/JsonEditor.vue'
 import { createObjectInstance } from '../objects'
+import { getBaseObject, getAllComponentsWithMetadata } from '../components/ComponentRegistry.js'
 
 const $q = useQuasar()
 
@@ -165,23 +166,47 @@ const defaultInspectorTarget = computed(() => ({ props: {}, emits: {} }))
 
 const codeEditor = ref({ visible: false, title: '', language: 'plaintext', content: '', componentId: null, propName: null, key: 0 })
 
-const nonVisualComponents = computed(() => {
+// Função para obter ícone do componente
+function getComponentIcon(componentName) {
+  // Usar metadados do objects.json para obter o ícone
+  const metadata = getAllComponentsWithMetadata().find(comp => comp.name === componentName)
+  return metadata?.icon || 'extension'
+}
+
+const nonVisualComponents = ref([])
+
+// Função para atualizar componentes não visuais
+async function updateNonVisualComponents() {
   const root = viewComponents.value[0]
-  if (!root) return []
+  if (!root) {
+    nonVisualComponents.value = []
+    return
+  }
+  
   const all = []
-  const walk = (node) => {
+  const walk = async (node) => {
     if (!node) return
     if (node !== root) {
-      const inst = createObjectInstance(node.name)
-      const isNonVisual = !!(inst && typeof inst.isNonVisual === 'function' && inst.isNonVisual())
-      if (isNonVisual) all.push(node)
+      try {
+        const inst = await createObjectInstance(node.name)
+        const isNonVisual = !!(inst && typeof inst.isNonVisual === 'function' && inst.isNonVisual())
+        if (isNonVisual) all.push(node)
+      } catch (error) {
+        console.warn(`Erro ao verificar se ${node.name} é não visual:`, error)
+      }
     }
     const ch = Array.isArray(node.children) ? node.children : []
-    ch.forEach(walk)
+    for (const child of ch) {
+      await walk(child)
+    }
   }
-  walk(root)
-  return all
-})
+  
+  await walk(root)
+  nonVisualComponents.value = all
+}
+
+// Observar mudanças nos viewComponents
+watch(viewComponents, updateNonVisualComponents, { deep: true, immediate: true })
 
 // JSON output para visualização
 const jsonOutput = computed({
@@ -523,10 +548,12 @@ function findInChildrenForParent(parent, childId) {
   return null
 }
 
-function insertComponentBeforeAfter(componentTemplate, targetId, position) {
+async function insertComponentBeforeAfter(componentTemplate, targetId, position) {
   const targetInfo = findParentAndIndex(targetId)
   if (!targetInfo.parent || targetInfo.index < 0) return
-  const instance = createInstanceFromTemplate(componentTemplate)
+  const instance = await createInstanceFromTemplate(componentTemplate)
+  if (!instance) return
+  
   let insertIndex = targetInfo.index
   if (position === 'after') insertIndex = insertIndex + 1
   if (insertIndex < 0) insertIndex = 0
@@ -534,7 +561,7 @@ function insertComponentBeforeAfter(componentTemplate, targetId, position) {
 
   // Definir slotName do novo componente conforme o irmão alvo ou slots do pai
   const targetNode = targetInfo.parent.children[targetInfo.index]
-  const parentInstance = createObjectInstance(targetInfo.parent.name)
+  const parentInstance = await createObjectInstance(targetInfo.parent.name)
   if (targetNode && targetNode.slotName) {
     instance.slotName = targetNode.slotName
   } else if (parentInstance && parentInstance.slots && parentInstance.slots.length === 1) {
@@ -568,31 +595,53 @@ function copyJson() {
   navigator.clipboard.writeText(jsonOutput.value)
 }
 
-function addComponentToView(componentTemplate) {
-  const instance = createInstanceFromTemplate(componentTemplate)
-  viewComponents.value.push(instance)
+async function addComponentToView(componentTemplate) {
+  console.log('Designer.addComponentToView()', { componentTemplate: componentTemplate?.name });
+  const instance = await createInstanceFromTemplate(componentTemplate)
+  if (instance) {
+    viewComponents.value.push(instance)
+  }
 }
 
-function createInstanceFromTemplate(componentTemplate) {
+async function createInstanceFromTemplate(componentTemplate) {
+  // Buscar o BaseObject correto para obter props e emits
+  const BaseObjectClass = await getBaseObject(componentTemplate.name)
+  if (!BaseObjectClass) {
+    console.error(`BaseObject não encontrado para: ${componentTemplate.name}`)
+    return null
+  }
+
+  // Criar instância do BaseObject para obter props e emits corretos
+  const baseObjectInstance = new BaseObjectClass()
+  
   const instance = {
     id: uuidv4(),
     name: componentTemplate.name,
     displayName: componentTemplate.displayName,
     category: componentTemplate.category,
     icon: componentTemplate.icon,
-    props: { ...componentTemplate.props },
-    emits: { ...componentTemplate.emits },
+    props: { ...(baseObjectInstance.props || {}) },
+    emits: { ...(baseObjectInstance.emits || {}) },
     values: {},
     children: []
   }
-  Object.keys(componentTemplate.props).forEach(propName => {
-    const prop = componentTemplate.props[propName]
-    instance.values[propName] = prop.default !== undefined ? (typeof prop.default === 'function' ? prop.default() : prop.default) : ''
-  })
-  Object.keys(componentTemplate.emits).forEach(emitName => {
-    const emit = componentTemplate.emits[emitName]
-    instance.values[emitName] = emit.default !== undefined ? emit.default : null
-  })
+  
+  // Processar props com valores padrão
+  if (baseObjectInstance.props && typeof baseObjectInstance.props === 'object') {
+    Object.keys(baseObjectInstance.props).forEach(propName => {
+      const prop = baseObjectInstance.props[propName]
+      instance.values[propName] = prop.default !== undefined ? (typeof prop.default === 'function' ? prop.default() : prop.default) : ''
+    })
+  }
+  
+  // Processar emits com valores padrão
+  if (baseObjectInstance.emits && typeof baseObjectInstance.emits === 'object') {
+    Object.keys(baseObjectInstance.emits).forEach(emitName => {
+      const emit = baseObjectInstance.emits[emitName]
+      instance.values[emitName] = emit.default !== undefined ? emit.default : null
+    })
+  }
+  
   return instance
 }
 
@@ -627,7 +676,7 @@ function handleComponentRemoved(component) {
   console.log('Componente removido:', component)
 }
 
-function moveComponentToSlot(componentToMove, parentComponentId, slotName) {
+async function moveComponentToSlot(componentToMove, parentComponentId, slotName) {
   console.log('Designer.moveComponentToSlot()', { 
     componentToMove: componentToMove?.name, 
     parentComponentId, 
@@ -641,8 +690,8 @@ function moveComponentToSlot(componentToMove, parentComponentId, slotName) {
   if (!parentComponent) return
   
   // Se o componente tem apenas 1 slot, usar 'default'
-  const objectInstance = createObjectInstance(parentComponent.name)
-  if (objectInstance && objectInstance.slots.length === 1) {
+  const objectInstance = await createObjectInstance(parentComponent.name)
+  if (objectInstance && objectInstance.slots && objectInstance.slots.length === 1) {
     slotName = 'default'
   }
   
@@ -658,22 +707,23 @@ function moveComponentToSlot(componentToMove, parentComponentId, slotName) {
   updateGlobalRoot()
 }
 
-function addComponentToSlot(componentTemplate, parentComponentId, slotName) {
+async function addComponentToSlot(componentTemplate, parentComponentId, slotName) {
   console.log('Designer.addComponentToSlot()', { 
     componentTemplate: componentTemplate?.name, 
     parentComponentId, 
     slotName 
   })
   // Criar instância do componente
-  const instance = createInstanceFromTemplate(componentTemplate)
+  const instance = await createInstanceFromTemplate(componentTemplate)
+  if (!instance) return
   
   // Encontrar o componente pai
   const parentComponent = findComponentById(parentComponentId)
   if (!parentComponent) return
   
   // Se o componente tem apenas 1 slot, usar 'default'
-  const objectInstance = createObjectInstance(parentComponent.name)
-  if (objectInstance && objectInstance.slots.length === 1) {
+  const objectInstance = await createObjectInstance(parentComponent.name)
+  if (objectInstance && objectInstance.slots && objectInstance.slots.length === 1) {
     slotName = 'default'
   }
   

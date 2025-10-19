@@ -90,8 +90,7 @@
 </template>
 
 <script setup>
-import { computed, h, resolveComponent, getCurrentInstance, ref, watchEffect, defineAsyncComponent } from 'vue'
-import { createObjectInstance } from '../objects'
+import { computed, h, resolveComponent, getCurrentInstance, ref, watchEffect, defineAsyncComponent, markRaw } from 'vue'
 import { 
   getQuasarComponent, 
   isQuasarComponent, 
@@ -99,7 +98,7 @@ import {
   loadCustomComponent, 
   isCustomComponent 
 } from './ComponentRegistry'
-import BaseObject from 'src/components/BaseObject'
+import { getBaseObject } from './ComponentRegistry.js'
 defineOptions({ name: 'ComponentRenderer' })
 
 const props = defineProps({
@@ -138,20 +137,30 @@ const asyncComponentCache = new Map()
 function renderNode(node) {
   if (!node || !node.tag) return null
   const originalTag = node.tag
+  console.log(`🎨 ComponentRenderer.renderNode() - tag: ${originalTag}`, node)
   let Comp
   
   // Componentes Vue customizados dinâmicos
-  if (originalTag.endsWith('vue')) {
-    const componentName = originalTag.replace('vue', '')
+  if (originalTag.endsWith('vue') || isCustomComponent(originalTag)) {
+    const componentName = originalTag.endsWith('vue') ? originalTag.replace('vue', '') : originalTag
+    console.log(`🔍 Detectado componente customizado: ${originalTag} -> ${componentName}`)
+    console.log(`🔍 isCustomComponent(${originalTag}):`, isCustomComponent(originalTag))
     
     // Tentar obter do cache primeiro
     Comp = getCustomComponent(componentName)
+    console.log(`🔍 getCustomComponent(${componentName}):`, Comp)
     
     // Se não estiver no cache, criar componente async
     if (!Comp) {
+      console.log(`🔄 Criando componente async para: ${componentName}`)
       if (!asyncComponentCache.has(componentName)) {
         const asyncComp = defineAsyncComponent({
-          loader: () => loadCustomComponent(componentName),
+          loader: async () => {
+            console.log(`🔄 Carregando componente Vue: ${componentName}`)
+            const vueComponent = await loadCustomComponent(componentName)
+            console.log(`🔄 Componente Vue carregado: ${componentName}`, vueComponent)
+            return vueComponent
+          },
           loadingComponent: () => h('div', { style: 'border: 1px dashed #ccc; padding: 10px; text-align: center;' }, 'Carregando...'),
           errorComponent: () => h('div', { style: 'border: 1px solid red; padding: 10px; text-align: center; color: red;' }, `Erro ao carregar ${componentName}`),
           delay: 200,
@@ -201,18 +210,29 @@ function renderNode(node) {
 }
 
 
-const VNodeRenderer = {
+const VNodeRenderer = markRaw({
   name: 'VNodeRenderer',
   inheritAttrs: false,
   props: { node: { type: Object, required: false } },
   setup(p) {
-    return () => renderNode(p.node)
+    console.log(`🎯 VNodeRenderer.setup() - node:`, p.node)
+    return () => {
+      console.log(`🎯 VNodeRenderer.render() - chamando renderNode`)
+      return renderNode(p.node)
+    }
   }
-}
+})
 
-const renderInfo = computed(() => {
-  const objectInstance = createObjectInstance(props.component.name)
-  if (!objectInstance) return null
+const renderInfo = ref(null)
+
+watchEffect(async () => {
+  const BaseObjectClass = await getBaseObject(props.component.name)
+  if (!BaseObjectClass) {
+    renderInfo.value = null
+    return
+  }
+
+  const objectInstance = new BaseObjectClass()
 
   const ctx = {
     component: props.component,
@@ -221,39 +241,61 @@ const renderInfo = computed(() => {
     emit: (event, data) => emit(event, data)
   }
 
-  const renderData = props.editMode === 'preview' 
+  const renderData = props.editMode === 'preview'
     ? objectInstance.renderPreview(ctx)
     : objectInstance.renderEdit(ctx)
 
-  if (!renderData || !renderData.tag) return null
+  console.log(`🎨 ComponentRenderer.renderInfo - component: ${props.component.name}, renderData:`, renderData)
 
-  const resolved = isQuasarComponent(renderData.tag)
-    ? { component: getQuasarComponent(renderData.tag) }
-    : { component: renderData.tag }
+  if (!renderData || !renderData.tag) {
+    renderInfo.value = null
+    return
+  }
 
-  return { ...resolved, props: renderData.props || {}, children: renderData.children || [] }
+  let resolved
+  if (isQuasarComponent(renderData.tag)) {
+    resolved = { component: getQuasarComponent(renderData.tag) }
+  } else if (isCustomComponent(renderData.tag)) {
+    // Para componentes customizados, usar VNodeRenderer para processar via renderNode
+    console.log(`🎯 Usando VNodeRenderer para componente customizado: ${renderData.tag}`)
+    resolved = { 
+      component: VNodeRenderer, 
+      props: { node: renderData },
+      children: renderData.children || []
+    }
+  } else {
+    resolved = { component: renderData.tag }
+  }
+
+  renderInfo.value = { 
+    ...resolved, 
+    props: { ...resolved.props, ...(renderData.props || {}) }, 
+    children: resolved.children || renderData.children || [] 
+  }
 })
 
 // Agrupar children por slotName
-const childrenBySlot = computed(() => {
+const childrenBySlot = ref({})
+
+watchEffect(async () => {
   const children = props.component.children || []
   const grouped = {}
   
-  children.forEach(child => {
+  for (const child of children) {
     const slotName = child.slotName || 'default'
     // Filtrar não-visuais no modo edição para não poluírem os slots do designer
-    const inst = createObjectInstance(child.name)
-    const isNonVisual = !!(inst && typeof inst.isNonVisual === 'function' && inst.isNonVisual())
+    const BaseObjectClass = await getBaseObject(child.name)
+    const isNonVisual = !!(BaseObjectClass && new BaseObjectClass().isNonVisual && new BaseObjectClass().isNonVisual())
     if (props.editMode === 'edit' && isNonVisual) {
-      return
+      continue
     }
     if (!grouped[slotName]) {
       grouped[slotName] = []
     }
     grouped[slotName].push(child)
-  })
+  }
   
-  return grouped
+  childrenBySlot.value = grouped
 })
 
 

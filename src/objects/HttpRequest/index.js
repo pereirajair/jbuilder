@@ -1,6 +1,6 @@
 import BaseObject from '../../components/BaseObject'
 
-export default class HttpRequest extends BaseObject {
+export default class HttpRequestObject extends BaseObject {
   constructor() {
     super({
       name: 'HttpRequest',

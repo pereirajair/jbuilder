@@ -1,16 +1,29 @@
 <template>
     <div style="border: 2px solid red; padding: 10px; margin: 5px;">
-        <h3>TESTE JTABLE - {{ component.values?.title || 'Sem título' }}</h3>
-        <p>Componente JTable funcionando!</p>
-        {{ component.props }}
-        <div v-if="component.children && component.children.length > 0">
-            <h4>Children:</h4>
+        {{ props.component.values.name }}
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telefone</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>John Doe</td>
+              <td>john.doe@example.com</td>
+              <td>1234567890</td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-if="props.component.children && props.component.children.length > 0">
             <ComponentRenderer
-                v-for="child in component.children"
+                v-for="child in props.component.children"
                 :key="child.id"
                 :component="child"
-                :edit-mode="editMode"
-                :selected-component-id="selectedComponentId"
+                :edit-mode="props.editMode"
+                :selected-component-id="props.selectedComponentId"
                 @select-component="$emit('select-component', $event)"
                 @open-inspector="$emit('open-inspector', $event)"
                 @delete-component="$emit('delete-component', $event)"
@@ -25,26 +38,22 @@
 </template>
 <script setup>
 import ComponentRenderer from '../../components/ComponentRenderer.vue'
-import JTableObject from './index'  
-import { ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   component: { type: Object, required: true },
   editMode: { type: String, default: 'edit' },
   selectedComponentId: { type: String, default: null }
 })
 
-defineEmits([
-  'select-component',
-  'open-inspector',
-  'delete-component',
-  'update-component-value',
-  'handle-drag-over',
-  'handle-drop-on-component',
-  'handle-drag-start',
-  'handle-drag-end'
-])
-
-const jtable = ref(new JTableObject());
+// defineEmits([
+//   'select-component',
+//   'open-inspector',
+//   'delete-component',
+//   'update-component-value',
+//   'handle-drag-over',
+//   'handle-drop-on-component',
+//   'handle-drag-start',
+//   'handle-drag-end'
+// ])
 
 </script>

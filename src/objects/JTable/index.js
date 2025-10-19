@@ -5,7 +5,7 @@ export default class JTableObject extends BaseObject {
     super({
       name: 'JTable',
       category: 'layout',
-      displayName: 'JTable Container',
+      displayName: 'JTable',
       description: 'Container table para agrupar colunas e linhas',
       icon: 'view_agenda',
       props: {
@@ -14,7 +14,7 @@ export default class JTableObject extends BaseObject {
         style: { type: String, default: '', description: 'Estilos CSS inline', editor: 'css' },
         backgroundColor: { type: String, default: '', description: 'Cor de fundo', editor: 'color' },
         padding: { type: String, default: '8px', description: 'Espaçamento interno' },
-        margin: { type: String, default: '0px', description: 'Espaçamento interno' }
+        margin: { type: String, default: '8px', description: 'Espaçamento interno' }
       },
       emits: {
 

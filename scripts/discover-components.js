@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const OBJECTS_DIR = path.join(__dirname, '../src/objects')
-const OUTPUT_FILE = path.join(__dirname, '../src/components/ComponentDiscovery.js')
+const OUTPUT_FILE = path.join(__dirname, '../src/objects/objects.json')
 
 function discoverComponents() {
   console.log('🔍 Escaneando componentes em:', OBJECTS_DIR)
@@ -36,14 +36,16 @@ function discoverComponents() {
       
       // Verificar se tem index.js e {name}Vue.vue
       const indexFile = path.join(componentPath, 'index.js')
-      const vueFile = path.join(componentPath, `${componentName}.vue`)
+      const vueFile = path.join(componentPath, `${entry.name}.vue`)
       
+      
+
       if (fs.existsSync(indexFile)) {
         console.log(`✅ Componente encontrado: ${componentName}`)
         
         components.push(componentName)
 
-        let _vueComponent = `src/objects/${entry.name}/${componentName}.vue`
+        let _vueComponent = `src/objects/${entry.name}/${entry.name}.vue`
         if (!fs.existsSync(vueFile)) {
             _vueComponent = false;
         }
@@ -94,40 +96,18 @@ function discoverComponents() {
 function generateDiscoveryFile(components, metadata) {
   const timestamp = new Date().toISOString()
   
-  const content = `// Sistema de descoberta automática de componentes
-// Gerado automaticamente em: ${timestamp}
-// Para regenerar: npm run discover-components
-
-// Lista de componentes descobertos automaticamente
-export const DISCOVERED_COMPONENTS = ${JSON.stringify(components, null, 2)}
-
-// Metadados dos componentes descobertos
-export const COMPONENT_METADATA = ${JSON.stringify(metadata, null, 2)}
-
-// Função para obter metadados de um componente
-export function getComponentMetadata(componentName) {
-  return COMPONENT_METADATA[componentName] || null
-}
-
-// Função para listar todos os componentes descobertos
-export function getAllDiscoveredComponents() {
-  return DISCOVERED_COMPONENTS.map(name => ({
-    name,
-    ...getComponentMetadata(name)
-  }))
-}
-
-// Função para verificar se um componente existe
-export function isComponentDiscovered(componentName) {
-  return DISCOVERED_COMPONENTS.includes(componentName)
-}
-
-// Função para obter componentes por categoria
-export function getComponentsByCategory(category) {
-  return getAllDiscoveredComponents().filter(comp => comp.category === category)
-}
-`
-
+  const jsonData = {
+    _meta: {
+      generated: timestamp,
+      version: "1.0.0",
+      description: "Sistema de descoberta automática de componentes"
+    },
+    components: components,
+    metadata: metadata
+  }
+  
+  const content = JSON.stringify(jsonData, null, 2)
+  
   fs.writeFileSync(OUTPUT_FILE, content)
   console.log(`📝 Arquivo gerado: ${OUTPUT_FILE}`)
 }
