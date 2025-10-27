@@ -9,12 +9,14 @@ export default class JTableObject extends BaseObject {
       description: 'Container table para agrupar colunas e linhas',
       icon: 'view_agenda',
       props: {
+        cols: { type: Number, default: 2, description: 'Número de colunas', editor: 'number', min: 1, max: 10 },
+        rows: { type: Number, default: 1, description: 'Número de linhas', editor: 'number', min: 1, max: 10 },
         content: { type: String, default: '', description: 'Conteúdo interno do div', editor: 'html' },
         class: { type: String, default: '', description: 'Classes CSS customizadas' },
         style: { type: String, default: '', description: 'Estilos CSS inline', editor: 'css' },
         backgroundColor: { type: String, default: '', description: 'Cor de fundo', editor: 'color' },
-        padding: { type: String, default: '8px', description: 'Espaçamento interno' },
-        margin: { type: String, default: '8px', description: 'Espaçamento interno' }
+        padding: { type: String, default: '0px', description: 'Espaçamento interno' },
+        margin: { type: String, default: '0px', description: 'Espaçamento interno' }
       },
       emits: {
 

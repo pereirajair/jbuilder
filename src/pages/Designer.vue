@@ -655,7 +655,16 @@ function openInspector(component) {
 
 function updateComponentValue(componentId, newValue) {
   const component = findComponentById(componentId)
-  if (component) Object.assign(component.values, newValue)
+  if (component) {
+    // Se newValue tem values, atualizar apenas values
+    if (newValue.values) {
+      Object.assign(component.values, newValue.values)
+    } else {
+      // Caso contrário, atualizar o componente inteiro
+      Object.assign(component, newValue)
+    }
+    console.log('✅ Componente atualizado:', componentId, newValue)
+  }
 }
 
 function handleDrop(event) {
